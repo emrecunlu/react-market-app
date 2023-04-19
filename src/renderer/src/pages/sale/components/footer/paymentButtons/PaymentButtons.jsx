@@ -14,7 +14,7 @@ const PaymetButtons = () => {
       <NakitButton />
       <YazarkasaNakitButton />
       <PosButton />
-      <CariButton />
+      {/* <CariButton /> */}
       <PersonelGiderButton />
       <MusteriGider />
       <FisYazdirButton />

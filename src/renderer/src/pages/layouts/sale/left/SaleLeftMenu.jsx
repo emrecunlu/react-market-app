@@ -3,18 +3,16 @@ import { grey } from '@mui/material/colors'
 import { FcSimCard } from 'react-icons/fc'
 import React from 'react'
 import LogoutButton from './components/LogoutButton'
-import PersonalButton from './components/PersonalButton'
 import EmployeeButton from './components/EmployeeButton'
+import SettingsButton from './components/SettingsButton'
+import OutGoingButton from './components/OutGoingButton'
 
 const SaleLeftMenu = () => {
   return (
     <Stack sx={{ width: 100, height: '100%' }} direction="column">
       <EmployeeButton />
-      <LogoutButton />
-      <LogoutButton />
-      <LogoutButton />
-      <LogoutButton />
-      <LogoutButton />
+      <OutGoingButton />
+      <SettingsButton />
       <LogoutButton />
     </Stack>
   )

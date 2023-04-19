@@ -1,13 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { usePersonal } from '../../../store/features/personal'
 import { Box } from '@mui/material'
 import SaleLeftMenu from './left/SaleLeftMenu'
+import store from '../../../store'
+import { useSettings } from '../../../store/features/settings'
+import SettingsHelper from '../../../utils/helpers/settingsHelper.js'
 
 const SaleLayout = () => {
-  const { isLoggedIn, credentials } = usePersonal()
+  const { isLoggedIn } = usePersonal()
+  const { settings } = useSettings()
 
   if (!isLoggedIn) return <Navigate to="/auth/login" />
+
+  useEffect(() => {
+    SettingsHelper.initSettings(settings)
+  }, [])
 
   return (
     <Box

@@ -5,7 +5,7 @@ import { FcCancel } from 'react-icons/fc'
 const LogoutButton = () => {
   return (
     <>
-      <LeftSideButton icon={<FcCancel />}>Çıkış Yap</LeftSideButton>
+      <LeftSideButton icon={<FcCancel />}>Vardiya Bitir</LeftSideButton>
     </>
   )
 }

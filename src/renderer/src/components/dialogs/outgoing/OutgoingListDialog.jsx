@@ -8,42 +8,38 @@ import {
   IconButton,
   Box
 } from '@mui/material'
-import CircularLoader from '../../common/CircularLoader'
 import {
-  useGetEmployees,
-  useRemoveEmployee,
-  useUpdateEmployee
-} from '../../../utils/hooks/useEmployeeRepository'
-import { DataGrid } from '@mui/x-data-grid'
-import { AiOutlineUserAdd } from 'react-icons/ai'
-import { FcMinus } from 'react-icons/fc'
+  useGetOutgoings,
+  useRemoveOutgoing,
+  useUpdateOutgoing
+} from '../../../utils/hooks/useOutgoingRepository'
 import PageLoader from '../../common/PageLoader'
-import EmployeeAddDialog from './EmployeeAddDialog'
-import ConfirmationDialog from '../ConfirmationDialog'
+import CircularLoader from '../../common/CircularLoader'
+import { DataGrid } from '@mui/x-data-grid'
+import { TbScriptPlus } from 'react-icons/tb'
+import OutgoingAddDialog from './OutgoingAddDialog'
+import SaleHelper from '../../../utils/helpers/saleHelper'
 import { toast } from 'react-hot-toast'
+import ConfirmationDialog from '../../dialogs/ConfirmationDialog'
+import { FcMinus } from 'react-icons/fc'
 
-const EmployeeListDialog = ({ onClose, isOpen }) => {
+const OutgoingListDialog = ({ onClose, isOpen }) => {
   const [dialog, setDialog] = useState(false)
   const [selected, setSelected] = useState(null)
 
   const columns = [
     {
       headerName: 'İsim',
-      field: 'firstname',
+      field: 'name',
       flex: 1,
       editable: true
     },
     {
-      headerName: 'Soyisim',
-      field: 'lastname',
+      headerName: 'Fiyat',
+      field: 'price',
       flex: 1,
-      editable: true
-    },
-    {
-      headerName: 'Telefon Numarası',
-      field: 'phoneNumber',
-      flex: 1,
-      editable: true
+      editable: true,
+      valueFormatter: ({ value }) => SaleHelper.toMoneyFormat(value)
     },
     {
       headerName: 'Sil',
@@ -58,59 +54,60 @@ const EmployeeListDialog = ({ onClose, isOpen }) => {
     }
   ]
 
-  const { data, isLoading, refetch } = useGetEmployees()
-
-  const { mutate: updateEmployee, isLoading: updateLoading } = useUpdateEmployee(() => {
-    toast.success('Personel güncellendi.')
+  const { mutate: updateOutgoing, isLoading: updateLoading } = useUpdateOutgoing(() => {
+    toast.success('Gider güncellendi.')
   })
-  const { mutate: removeEmployee, isLoading: removeLoading } = useRemoveEmployee(() => {
-    toast.success("Personel başarıyla silindi.")
+
+  const { mutate: removeOutgoing, isLoading: removeLoading } = useRemoveOutgoing(() => {
+    toast.success('Gider silindi.')
 
     refetch()
   })
 
-  const handleRowUpdate = (row) => {
-    updateEmployee(row)
-
-    return row
-  }
-
   const handleConfirm = () => {
-    removeEmployee(selected.id)
+    removeOutgoing(selected.id)
     setSelected(true)
 
     refetch()
   }
 
+  const handleRowUpdate = (row) => {
+    updateOutgoing(row)
+
+    return { ...row, price: SaleHelper.toMoneyFormat(parseFloat(row.price)) }
+  }
+
+  const { data, isLoading, refetch } = useGetOutgoings()
+
   return (
     <>
       <ConfirmationDialog
-        title="Personel Sil"
-        description="Personeli silmek istediğinizden emin misiniz?"
+        title="Gider Sil"
+        description="Gideri silmek istediğinizden emin misiniz?"
         isOpen={selected !== null}
         onClose={() => setSelected(null)}
         onConfirm={handleConfirm}
       />
-      <EmployeeAddDialog
-        onSuccess={() => refetch()}
+      <OutgoingAddDialog
         isOpen={dialog}
+        onSuccess={() => refetch()}
         onClose={() => setDialog(false)}
       />
       <Dialog fullWidth maxWidth="xl" open={isOpen} onClose={onClose}>
         <PageLoader isLoading={updateLoading || removeLoading}>
-          <DialogTitle>Personel Listesi</DialogTitle>
+          <DialogTitle>Gider Listesi</DialogTitle>
           <DialogContent dividers>
             {(isLoading && <CircularLoader />) || (
               <>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <Button
-                    endIcon={<AiOutlineUserAdd />}
+                    endIcon={<TbScriptPlus />}
                     sx={{ mb: 2, ml: 'auto' }}
                     onClick={() => setDialog(true)}
                     size="large"
                     variant="contained"
                   >
-                    Personel Ekle
+                    Gider Ekle
                   </Button>
                 </Box>
                 <DataGrid
@@ -128,4 +125,4 @@ const EmployeeListDialog = ({ onClose, isOpen }) => {
   )
 }
 
-export default EmployeeListDialog
+export default OutgoingListDialog

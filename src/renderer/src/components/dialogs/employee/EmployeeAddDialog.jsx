@@ -13,16 +13,19 @@ import { useAddEmployee } from '../../../utils/hooks/useEmployeeRepository'
 import PageLoader from '../../common/PageLoader'
 import { toast } from 'react-hot-toast'
 
-const EmployeeAddDialog = ({ isOpen, onClose }) => {
+const EmployeeAddDialog = ({ isOpen, onClose, onSuccess }) => {
   const [employee, setEmployee] = useState({
     firstname: '',
     lastname: '',
     phoneNumber: ''
   })
 
-  const { isLoading, mutate: addEmployee } = useAddEmployee(() => {
+  const { isLoading, mutate: addEmployee } = useAddEmployee((response) => {
+    const { data: result } = response.data
+
     setEmployee({ firstname: '', lastname: '', phoneNumber: '' })
     toast.success('Personel başarıyla eklendi.')
+    onSuccess(result)
     onClose()
   })
 
