@@ -24,6 +24,6 @@ export const useNewOutgoing = (onSuccess, onError) => {
   )
 }
 
-export const getAll = async (onSuccess, onError) => {
-  return useMutation((date, userId) => SaleRepository.getAll(date, userId))
+export const useGetSales = (onSuccess, onError) => {
+  return useMutation(({date, userId}) => SaleRepository.getAll(date, userId))
 }

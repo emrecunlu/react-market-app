@@ -46,7 +46,7 @@ const YazarKasaButtons = () => {
     const localAddress = await window.api.getLocalAddress()
 
     const ipAdddress = await window.api.getLocalAddress()
-    const newSocket = new WebSocket(`ws://192.168.10.117:1235`)
+    const newSocket = new WebSocket(`ws://192.168.10.115:1235`)
 
     setSocket(newSocket)
 
