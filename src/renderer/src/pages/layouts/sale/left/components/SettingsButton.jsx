@@ -9,7 +9,7 @@ const SettingsButton = () => {
   return (
     <>
       {dialog && <SettingsDialog isOpen={dialog} onClose={() => setDialog(false)} />}
-      <LeftSideButton onClick={() => setDialog(true)} icon={<FcSettings />}>
+      <LeftSideButton sx={{ flex: 1 }} onClick={() => setDialog(true)} icon={<FcSettings />}>
         Ayarlar
       </LeftSideButton>
     </>

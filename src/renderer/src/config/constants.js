@@ -12,3 +12,10 @@ export const FatIrsSip = {
   Siparis: 2,
   Fatura: 3
 }
+
+export const ReportType = {
+  CancelDocument: 0,
+  ZReport: 1,
+  XReport: 2,
+  EndDayReport: 3
+}

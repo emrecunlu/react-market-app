@@ -4,16 +4,14 @@ import PaymetButton from '../../../../../../components/buttons/PaymetButton'
 import PageLoader from '../../../../../../components/common/PageLoader'
 import { useNewSale } from '../../../../../../utils/hooks/useSaleRepository'
 import { PaymentType } from '../../../../../../config/constants'
-import { clearAll, useBasket } from '../../../../../../store/features/basket'
-import store from '../../../../../../store'
-import { toast } from 'react-hot-toast'
+import { useBasket } from '../../../../../../store/features/basket'
+import SaleHelper from '../../../../../../utils/helpers/saleHelper'
 
 const NakitButton = () => {
   const onSuccess = (response) => {
     const { data: result } = response.data
 
-    store.dispatch(clearAll())
-    toast.success('Sipariş başarılı!')
+    SaleHelper.succesSale(result)
   }
 
   const { data: basketItems } = useBasket()
@@ -23,7 +21,7 @@ const NakitButton = () => {
     const personal = await window.api.getStoreValue('personal')
 
     const requestBody = {
-      shiftId: 1,
+      shiftId: personal.shiftId,
       isVATIncluded: true,
       paymentType: PaymentType.Nakit,
       userId: personal.userId
@@ -34,7 +32,7 @@ const NakitButton = () => {
       stockName: item.stokAdi,
       amount: item.miktar,
       price: item.satisFiat1,
-      transfer: true,
+      transfer: false,
       vatGroup: item.kdvOrani.toString()
     }))
 

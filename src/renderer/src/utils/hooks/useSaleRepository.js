@@ -7,4 +7,23 @@ export const useNewSale = (onSuccess, onError) => {
     onSuccess
   })
 }
-   
+
+export const useAddByShift = (onSuccess, onError) => {
+  return useMutation((shiftId) => SaleRepository.adddByShift(shiftId), {
+    onSuccess,
+    onError
+  })
+}
+
+export const useNewOutgoing = (onSuccess, onError) => {
+  return useMutation((body) =>
+    SaleRepository.addOutgoing(body, {
+      onSuccess,
+      onError
+    })
+  )
+}
+
+export const getAll = async (onSuccess, onError) => {
+  return useMutation((date, userId) => SaleRepository.getAll(date, userId))
+}

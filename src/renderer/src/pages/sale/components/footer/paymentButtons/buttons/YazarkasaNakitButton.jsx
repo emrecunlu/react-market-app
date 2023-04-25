@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PaymetButton from '../../../../../../components/buttons/PaymetButton'
-import {FcSelfServiceKiosk} from 'react-icons/fc';
+import { FcSelfServiceKiosk } from 'react-icons/fc'
 
 const YazarkasaNakitButton = () => {
   return (

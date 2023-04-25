@@ -7,13 +7,13 @@ import CariButton from './buttons/CariButton'
 import PersonelGiderButton from './buttons/PersonelGiderButton'
 import MusteriGider from './buttons/MusteriGider'
 import FisYazdirButton from './buttons/FisYazdirButton'
+import YazarKasaButtons from './buttons/YazarKasaButtons'
 
 const PaymetButtons = () => {
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       <NakitButton />
-      <YazarkasaNakitButton />
-      <PosButton />
+      <YazarKasaButtons />
       {/* <CariButton /> */}
       <PersonelGiderButton />
       <MusteriGider />

@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { usePersonal } from '../../../store/features/personal'
-import { Box } from '@mui/material'
+import { Box, Button, CssBaseline } from '@mui/material'
 import SaleLeftMenu from './left/SaleLeftMenu'
-import store from '../../../store'
 import { useSettings } from '../../../store/features/settings'
 import SettingsHelper from '../../../utils/helpers/settingsHelper.js'
 

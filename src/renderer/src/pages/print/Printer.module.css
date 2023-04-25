@@ -1,0 +1,167 @@
+.barcode {
+  width: 80mm;
+  padding-bottom: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+.barcode .companyName {
+  font-size: 18px;
+  text-align: center;
+}
+
+.barcode .address {
+  font-size: 10px;
+  display: block;
+  text-align: center;
+  padding: 4px 0;
+}
+
+.barcode .address span {
+  display: block;
+  line-height: 1rem;
+}
+
+.barcode .header h1 {
+  background-color: #ccc;
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.barcode .header ul {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 1);
+}
+
+.barcode .header ul li {
+  display: flex;
+  align-items: center;
+}
+
+.barcode .header ul li span {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.barcode .header ul li span:first-child {
+  margin-right: 5px;
+}
+
+.barcode .footer .price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.barcode .footer .price h1 {
+  font-size: 13px;
+  text-align: center;
+}
+
+.barcode .footer .price .total {
+  background-color: #ccc;
+  width: 75px;
+  padding: 2px 8px;
+}
+.barcode .footer .price .total h1 {
+  font-weight: 800;
+  text-align-last: right;
+  font-size: 14px;
+}
+
+.barcode .footer .area > h1 {
+  display: block;
+  background: #ccc;
+}
+
+.barcode .footer .area > h1 {
+  font-size: 13px;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+
+.barcode .customerName h1 {
+  font-size: 12px;
+}
+
+.barcode .footer .areaContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.barcode .footer .area {
+  flex: 1;
+}
+
+.barcode .footer .area .areaField {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barcode .footer .area .areaField h1 {
+  font-size: 13px;
+}
+
+.barcode .footer .area .areaField {
+  height: 60px;
+}
+
+.barcode .footer .area > h1 {
+  font-size: 12px;
+}
+
+.barcode .footer .welcomeBack {
+  background: #ccc;
+}
+
+.barcode .footer .welcomeBack h1 {
+  font-size: 12px;
+  text-align: center;
+}
+
+.barcode .items {
+  margin: 10px 0;
+}
+
+.barcode .items table thead tr th {
+  font-size: 12px;
+}
+
+.barcode .items table thead tr th:first-child {
+  text-align: left;
+}
+
+.barcode .items table thead tr th:last-child {
+  text-align: right;
+}
+
+.barcode .items table th,
+.barcode .items table td {
+  padding: 5px;
+}
+
+.barcode .items table {
+  width: 100%;
+}
+
+.barcode .items table tr td:last-child {
+  text-align: right;
+}
+
+.barcode .items table tr td:not(:first-child) {
+  text-align: center;
+}
+
+.barcode .items table tbody tr td {
+  font-size: 10px;
+}

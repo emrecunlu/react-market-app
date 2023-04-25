@@ -1,13 +1,28 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Notification } from 'electron'
 import { join } from 'path'
 import { networkInterfaces } from 'os'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { execFile, spawn } from 'child_process'
 import Store from 'electron-store'
 import icon from '../../resources/icon.png?asset'
 
 Store.initRenderer()
 
-const store = new Store()
+const store = new Store({ name: 'config' })
+const slipStore = new Store({ name: 'slips' })
+
+let child = null
+
+function runHuginApp() {
+  const huginAppDirr = join(app.getPath('userData'), 'hugin/HuginSocketApp.exe')
+
+  child = spawn(huginAppDirr)
+
+  child.on('close', (code) => {
+    console.log(`Program exited with code ${code}`)
+    child = null
+  })
+}
 
 function createWindow() {
   // Create the browser window.
@@ -27,6 +42,14 @@ function createWindow() {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+
+    setInterval(() => {
+      console.log(child === "null" ? "Kapalı" : "Açık")
+
+      if (child === null) {
+        runHuginApp()
+      }
+    }, 1000)
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -89,6 +112,11 @@ ipcMain.handle('setStoreValue', (event, data) => {
   return store.get(key)
 })
 
+ipcMain.handle('deleteStoreValue', (event, key) => {
+  store.delete(key)
+
+  return true
+})
 ipcMain.handle('getLocalAddress', () => {
   const interfaces = networkInterfaces()
   let ipAddress
@@ -102,4 +130,57 @@ ipcMain.handle('getLocalAddress', () => {
   })
 
   return ipAddress
+})
+
+ipcMain.on('print:slip', () => {
+  const printerWindow = new BrowserWindow({
+    show: false,
+    autoHideMenuBar: true,
+    ...(process.platform === 'linux' ? { icon } : {}),
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  })
+
+  printerWindow.on('ready-to-show', () => {
+    printerWindow.webContents.openDevTools();
+  })
+
+  printerWindow.webContents.on('did-finish-load', async () => {
+    const settings = await store.get('settings')
+
+    setTimeout(() => {
+      printerWindow.webContents.print(
+        {
+          margins: {
+            marginType: 'none'
+          },
+          silent: true,
+          printBackground: true,
+          deviceName: settings?.printerName ?? ''
+        },
+        (success, failureReason) => {
+          const notification = new Notification({
+            title: 'Fiş Durumu',
+            body: success ? 'Başarılı' : failureReason
+          })
+
+          notification.show()
+/* 
+          printerWindow.close() */
+        }
+      )
+    }, 500)
+  })
+
+
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    printerWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#/printer')
+  } else {
+    printerWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: '#/printer' })
+  }
 })

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { set as setBasketItem, setSelecteds, useBasket } from '../../../../store/features/basket'
 import { DataGrid } from '@mui/x-data-grid'
 import SaleHelper from '../../../../utils/helpers/saleHelper'
@@ -51,6 +51,10 @@ const BasketList = () => {
     }
   ]
 
+  const reversedData = useMemo(() => {
+    return [...basketLists].reverse()
+  }, [basketLists])
+
   const handleCellEditStop = (params) => {
     store.dispatch(setBasketItem(params))
 
@@ -68,7 +72,7 @@ const BasketList = () => {
           processRowUpdate={handleCellEditStop}
           hideFooterPagination={true}
           columns={columns}
-          rows={basketLists}
+          rows={reversedData}
           checkboxSelection
           rowSelectionModel={selecteds}
           onRowSelectionModelChange={handleRowSelectionModelChange}

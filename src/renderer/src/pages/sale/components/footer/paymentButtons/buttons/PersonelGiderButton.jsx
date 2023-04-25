@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 import { clearAll } from '../../../../../../store/features/basket'
 import store from '../../../../../../store'
 import SelectEmployeeDialog from '../../../../../../components/dialogs/employee/SelectEmployeeDialog'
+import SaleHelper from '../../../../../../utils/helpers/saleHelper'
 
 const PersonelGiderButton = () => {
   const [dialog, setDialog] = useState(false)
@@ -18,8 +19,7 @@ const PersonelGiderButton = () => {
   const onSuccess = async (response) => {
     const { data: result } = response.data
 
-    store.dispatch(clearAll())
-    toast.success('Sipariş başarılı!')
+    SaleHelper.succesSale(result)
   }
 
   const { isLoading, mutate: newSale } = useNewSale(onSuccess)
@@ -30,7 +30,7 @@ const PersonelGiderButton = () => {
     const personal = await window.api.getStoreValue('personal')
 
     const requestBody = {
-      shiftId: 1,
+      shiftId: personal.shiftId,
       isVATIncluded: true,
       paymentType: PaymentType.Personel,
       userId: personal.userId,

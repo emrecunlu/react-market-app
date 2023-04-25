@@ -33,7 +33,7 @@ const SelectEmployeeDialog = ({ isOpen, onClose, onSelected }) => {
         onClose={() => setSelected(null)}
         onConfirm={() => onSelected(selected)}
       />
-      <Dialog fullWidth maxWidth="xl" onClose={onClose} open={isOpen}>
+      <Dialog fullWidth maxWidth="xl" onClose={onClose} open={isOpen ?? false}>
         <DialogTitle>Personel Listesi</DialogTitle>
         <DialogContent dividers>
           {(isLoading && <PageLoader />) || (

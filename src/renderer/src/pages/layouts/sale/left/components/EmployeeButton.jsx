@@ -9,7 +9,7 @@ const EmployeeButton = () => {
   return (
     <>
       {dialog && <EmployeeListDialog isOpen={dialog} onClose={() => setDialog(false)} />}
-      <LeftSideButton icon={<FcBusinessman />} onClick={() => setDialog(true)}>
+      <LeftSideButton sx={{ flex: 1 }} icon={<FcBusinessman />} onClick={() => setDialog(true)}>
         Personel
       </LeftSideButton>
     </>

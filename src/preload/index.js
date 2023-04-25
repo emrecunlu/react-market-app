@@ -1,11 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+
 // Custom APIs for renderer
 const api = {
   getStoreValue: async (key) => await ipcRenderer.invoke('getStoreValue', key),
   setStoreValue: async ({ key, value }) => await ipcRenderer.invoke('setStoreValue', { key, value }),
-  getLocalAddress: async () => await ipcRenderer.invoke('getLocalAddress')
+  deleteStoreValue: async (key) => await ipcRenderer.invoke('deleteStoreValue', key),
+  getLocalAddress: async () => await ipcRenderer.invoke('getLocalAddress'),
+  setStoreSlipValue: async ({key, value}) => ipcRenderer.send('setStoreValue:slip', {key, value}),
+  getLastSlip: async () => await ipcRenderer.invoke('getLastSlip'),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

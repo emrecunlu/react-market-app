@@ -9,7 +9,7 @@ const OutGoingButton = () => {
   return (
     <>
       {dialog && <OutgoingListDialog onClose={() => setDialog(false)} isOpen={dialog} />}
-      <LeftSideButton icon={<FcShop />} onClick={() => setDialog(true)}>
+      <LeftSideButton sx={{ flex: 1 }} icon={<FcShop />} onClick={() => setDialog(true)}>
         Gider
       </LeftSideButton>
     </>

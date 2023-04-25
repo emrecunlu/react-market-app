@@ -7,7 +7,11 @@ import {
   Button,
   TextField,
   Divider,
-  Stack
+  Stack,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material'
 import { MdLogin } from 'react-icons/md'
 import { grey } from '@mui/material/colors'
@@ -16,18 +20,23 @@ import { useAuthLogin } from '../../utils/hooks/useAuthRepository'
 import PersonalHelper from '../../utils/helpers/personalHelper'
 import { useNavigate } from 'react-router-dom'
 import PageLoader from '../../components/common/PageLoader'
+import { useGetShifts } from '../../utils/hooks/useShiftRepository'
 
 const LoginPage = () => {
   const [user, setUser] = useState({
     username: '',
-    password: ''
+    password: '',
+    shift: ''
   })
   const navigation = useNavigate()
 
   const onSuccess = async (response) => {
     const { data: result } = response.data
 
-    const storageData = await window.api.setStoreValue({ key: 'personal', value: result })
+    const storageData = await window.api.setStoreValue({
+      key: 'personal',
+      value: { ...result, shiftId: user.shift }
+    })
 
     await PersonalHelper.login(storageData)
 
@@ -35,6 +44,7 @@ const LoginPage = () => {
   }
 
   const { isLoading, mutate: login } = useAuthLogin(onSuccess)
+  const { data: shifts, isLoading: shiftLoading } = useGetShifts()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -43,7 +53,7 @@ const LoginPage = () => {
   }
 
   return (
-    <PageLoader isLoading={isLoading}>
+    <PageLoader isLoading={isLoading || shiftLoading}>
       <Box
         sx={{
           height: '100vh',
@@ -62,6 +72,23 @@ const LoginPage = () => {
               </Typography>
               <Divider sx={{ my: 4 }} />
               <Stack direction="column" spacing={2}>
+                <FormControl fullWidth>
+                  <InputLabel id="shift-select-label">Vardiya</InputLabel>
+                  <Select
+                    labelId="shift-select-label"
+                    id="shift-select-box"
+                    placeholder="Vardiya seçiniz."
+                    value={user.shift ?? ''}
+                    onChange={(e) => setUser((user) => ({ ...user, shift: e.target.value }))}
+                    label="Vardiya"
+                  >
+                    {shifts?.map((item) => (
+                      <MenuItem sx={{ height: 50 }} key={item.id} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <TextField
                   label="Kullanıcı Adı"
                   value={user.username}
@@ -81,6 +108,7 @@ const LoginPage = () => {
             </CardContent>
             <CardActions>
               <Button
+                disabled={Object.values(user).some((el) => el === '')}
                 type="submit"
                 sx={{ ml: 'auto' }}
                 size="large"

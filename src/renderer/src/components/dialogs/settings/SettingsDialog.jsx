@@ -27,6 +27,8 @@ const SettingsDialog = ({ isOpen, onClose }) => {
     SettingsHelper.setSettings(data)
 
     toast.success("Ayarlar güncellendi")
+
+    onClose();
   }
 
   return (
