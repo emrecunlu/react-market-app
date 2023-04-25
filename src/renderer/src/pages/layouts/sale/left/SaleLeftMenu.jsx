@@ -14,7 +14,7 @@ const SaleLeftMenu = () => {
     <Stack sx={{ width: 100, height: '100%' }} direction="column">
       <EmployeeButton />
       <OutGoingButton />
-     {/*  <SaleListButton /> */}
+      <SaleListButton />
       {/* <SlipButton /> */}
       <SettingsButton />
       <LogoutButton />

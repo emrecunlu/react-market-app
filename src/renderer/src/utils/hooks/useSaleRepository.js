@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import SaleRepository from '../../repositories/SaleRepository'
 
 export const useNewSale = (onSuccess, onError) => {
@@ -24,6 +24,12 @@ export const useNewOutgoing = (onSuccess, onError) => {
   )
 }
 
-export const useGetSales = (onSuccess, onError) => {
-  return useMutation(({date, userId}) => SaleRepository.getAll(date, userId))
+export const useGetSales = (date) => {
+  return useQuery(['sales', date], async () => {
+    const personal = await window.api.getStoreValue('personal')
+
+    const { data: results } = (await SaleRepository.getAll(date, personal.userId)).data
+
+    return results
+  })
 }
