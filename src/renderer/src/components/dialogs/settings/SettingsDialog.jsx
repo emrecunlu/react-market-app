@@ -20,15 +20,16 @@ const SettingsDialog = ({ isOpen, onClose }) => {
   const [data, setData] = useState({
     printerName: settings.printerName,
     serverAddress: settings.serverAddress,
+    localAddress: settings.localAddress,
     vatIncluded: settings.vatIncluded
   })
 
   const handleClick = () => {
     SettingsHelper.setSettings(data)
 
-    toast.success("Ayarlar güncellendi")
+    toast.success('Ayarlar güncellendi')
 
-    onClose();
+    onClose()
   }
 
   return (
@@ -42,7 +43,16 @@ const SettingsDialog = ({ isOpen, onClose }) => {
               onChange={(e) => setData({ ...data, serverAddress: e.target.value })}
               fullWidth
               label="Server Adresi"
-              placeholder="Lütfen yazıcı ismi giriniz."
+              placeholder="Lütfen server adresi giriniz."
+            />
+          </Grid>
+          <Grid item md={6}>
+            <TextField
+              value={data.localAddress}
+              onChange={(e) => setData({ ...data, localAddress: e.target.value })}
+              fullWidth
+              label="Local Adres"
+              placeholder="Lütfen local adres ismi giriniz."
             />
           </Grid>
           <Grid item md={6}>
@@ -60,7 +70,7 @@ const SettingsDialog = ({ isOpen, onClose }) => {
               onClick={() => setData({ ...data, vatIncluded: !data.vatIncluded })}
               variant={data.vatIncluded ? 'contained' : 'outlined'}
             >
-              KDV Dahil ({data.vatIncluded ? "Aktif" : "Pasif"})
+              KDV Dahil ({data.vatIncluded ? 'Aktif' : 'Pasif'})
             </Button>
           </Grid>
         </Grid>

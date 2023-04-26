@@ -42,10 +42,9 @@ function createWindow() {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+    mainWindow.maximize()
 
     setInterval(() => {
-      console.log(child === "null" ? "Kapalı" : "Açık")
-
       if (child === null) {
         runHuginApp()
       }
@@ -146,7 +145,7 @@ ipcMain.on('print:slip', () => {
   })
 
   printerWindow.on('ready-to-show', () => {
-    printerWindow.webContents.openDevTools();
+    printerWindow.webContents.openDevTools()
   })
 
   printerWindow.webContents.on('did-finish-load', async () => {
@@ -169,14 +168,12 @@ ipcMain.on('print:slip', () => {
           })
 
           notification.show()
-/* 
-          printerWindow.close() */
+
+          printerWindow.close()
         }
       )
     }, 500)
   })
-
-
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     printerWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#/printer')

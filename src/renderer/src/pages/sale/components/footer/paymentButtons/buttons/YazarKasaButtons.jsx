@@ -8,6 +8,7 @@ import { useBasket } from '../../../../../../store/features/basket'
 import SaleHelper from '../../../../../../utils/helpers/saleHelper'
 import PageLoader from '../../../../../../components/common/PageLoader'
 import { Dialog } from '@mui/material'
+import { useSettings } from '../../../../../../store/features/settings'
 
 const YazarKasaButtons = () => {
   const [socket, setSocket] = useState(null)
@@ -18,6 +19,7 @@ const YazarKasaButtons = () => {
   })
 
   const { data: basketItems } = useBasket()
+  const { settings } = useSettings()
 
   const onSuccess = (response) => {
     const { data: result } = response.data
@@ -30,7 +32,7 @@ const YazarKasaButtons = () => {
         SlipCopy: true,
         Data: basketItems.map((item) => ({
           DeptId: SaleHelper.getDeptId(item.kdvOrani),
-        Amount: item.miktar,
+          Amount: item.miktar,
           Price: item.satisFiat1,
           Name: item.stokAdi
         }))
@@ -46,7 +48,7 @@ const YazarKasaButtons = () => {
     const localAddress = await window.api.getLocalAddress()
 
     const ipAdddress = await window.api.getLocalAddress()
-    const newSocket = new WebSocket(`ws://192.168.10.115:1235`)
+    const newSocket = new WebSocket(`ws://${localAddress}:1235`)
 
     setSocket(newSocket)
 
@@ -65,6 +67,10 @@ const YazarKasaButtons = () => {
         default:
           return
       }
+    })
+
+    newSocket.addEventListener('error', () => {
+      toast.error('Yazarkasa bağlantı hatası(Socket Error)')
     })
 
     return () => {

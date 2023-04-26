@@ -9,6 +9,7 @@ class SettingsHelper {
   }
 
   static async setSettings(data) {
+    console.log('Settings', data)
     store.dispatch(setSettingsData(data))
     await window.api.setStoreValue({ key: 'settings', value: data })
   }

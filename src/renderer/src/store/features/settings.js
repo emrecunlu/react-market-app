@@ -5,6 +5,7 @@ const initialState = {
   settings: {
     printerName: '',
     serverAddress: '',
+    localAddress: '',
     vatIncluded: false
   }
 }
