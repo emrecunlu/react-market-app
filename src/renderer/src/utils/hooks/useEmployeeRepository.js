@@ -10,21 +10,24 @@ export const useGetEmployees = () => {
 }
 
 export const useUpdateEmployee = (onSuccess, onError) => {
-  return useMutation((obj) => EmployeRepository.update(obj), {
+  return useMutation({
+    mutationFn: (obj) => EmployeRepository.update(obj),
     onSuccess,
     onError
   })
 }
 
 export const useAddEmployee = (onSuccess, onError) => {
-  return useMutation((obj) => EmployeRepository.add(obj), {
-    onSuccess,
-    onError
+  return useMutation({
+    mutationFn: (obj) => EmployeRepository.add(obj),
+    onError,
+    onSuccess
   })
 }
 
 export const useRemoveEmployee = (onSuccess, onError) => {
-  return useMutation((id) => EmployeRepository.remove(id), {
+  return useMutation({
+    mutationFn: (id) => EmployeRepository.remove(id),
     onSuccess,
     onError
   })

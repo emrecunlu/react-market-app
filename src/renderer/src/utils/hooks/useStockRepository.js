@@ -10,5 +10,9 @@ export const useGetStocks = (search) => {
 }
 
 export const useGetStock = (onSuccess, onError) => {
-  return useMutation((code) => StockRepository.getStock(code), { onSuccess, onError })
+  return useMutation({
+    mutationFn: (code) => StockRepository.getStock(code),
+    onSuccess,
+    onError
+  })
 }

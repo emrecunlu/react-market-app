@@ -12,6 +12,7 @@ import { AiOutlineSave } from 'react-icons/ai'
 import PageLoader from '../../common/PageLoader'
 import { toast } from 'react-hot-toast'
 import { useAddOutgoing } from '../../../utils/hooks/useOutgoingRepository'
+import BaseDialog from '../../common/BaseDialog'
 
 const OutgoingAddDialog = ({ isOpen, onClose, onSuccess }) => {
   const [outgoing, setOutgoing] = useState({
@@ -29,9 +30,8 @@ const OutgoingAddDialog = ({ isOpen, onClose, onSuccess }) => {
   })
 
   return (
-    <Dialog fullWidth maxWidth="md" onClose={onClose} open={isOpen}>
+    <BaseDialog title="Gider Ekle" maxWidth="md" onClose={onClose} isOpen={isOpen}>
       <PageLoader isLoading={isLoading}>
-        <DialogTitle>Gider Ekle</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2} rowSpacing={4}>
             <Grid item md={12}>
@@ -68,7 +68,7 @@ const OutgoingAddDialog = ({ isOpen, onClose, onSuccess }) => {
           </Button>
         </DialogActions>
       </PageLoader>
-    </Dialog>
+    </BaseDialog>
   )
 }
 

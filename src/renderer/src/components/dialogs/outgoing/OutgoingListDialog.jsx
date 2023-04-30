@@ -22,6 +22,7 @@ import SaleHelper from '../../../utils/helpers/saleHelper'
 import { toast } from 'react-hot-toast'
 import ConfirmationDialog from '../../dialogs/ConfirmationDialog'
 import { FcMinus } from 'react-icons/fc'
+import BaseDialog from '../../common/BaseDialog'
 
 const OutgoingListDialog = ({ onClose, isOpen }) => {
   const [dialog, setDialog] = useState(false)
@@ -54,9 +55,7 @@ const OutgoingListDialog = ({ onClose, isOpen }) => {
     }
   ]
 
-  const { mutate: updateOutgoing, isLoading: updateLoading } = useUpdateOutgoing(() => {
-    toast.success('Gider güncellendi.')
-  })
+  const { mutate: updateOutgoing, isLoading: updateLoading } = useUpdateOutgoing()
 
   const { mutate: removeOutgoing, isLoading: removeLoading } = useRemoveOutgoing(() => {
     toast.success('Gider silindi.')
@@ -93,9 +92,8 @@ const OutgoingListDialog = ({ onClose, isOpen }) => {
         onSuccess={() => refetch()}
         onClose={() => setDialog(false)}
       />
-      <Dialog fullWidth maxWidth="xl" open={isOpen} onClose={onClose}>
+      <BaseDialog title="Gider Listesi" isOpen={isOpen} onClose={onClose}>
         <PageLoader isLoading={updateLoading || removeLoading}>
-          <DialogTitle>Gider Listesi</DialogTitle>
           <DialogContent dividers>
             {(isLoading && <CircularLoader />) || (
               <>
@@ -120,7 +118,7 @@ const OutgoingListDialog = ({ onClose, isOpen }) => {
             )}
           </DialogContent>
         </PageLoader>
-      </Dialog>
+      </BaseDialog>
     </>
   )
 }

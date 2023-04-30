@@ -42,7 +42,7 @@ const NakitButton = () => {
   return (
     <>
       <PageLoader isLoading={isLoading}>
-        <PaymetButton onClick={handleClick} icon={<FcMoneyTransfer />}>
+        <PaymetButton disabled={basketItems.length === 0} onClick={handleClick} icon={<FcMoneyTransfer />}>
           NAKİT
         </PaymetButton>
       </PageLoader>

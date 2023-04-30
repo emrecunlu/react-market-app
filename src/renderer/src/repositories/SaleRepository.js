@@ -5,8 +5,8 @@ class SaleRepository {
     return axiosInstance.post('/sale/add', body)
   }
 
-  static adddByShift(shiftId) {
-    return axiosInstance.post('/sale/add-by-shift?shift=' + shiftId)
+  static adddByShift(userId, documentType) {
+    return axiosInstance.post('/sale/add-by-user?userId=' + userId + '&documentType=' + documentType);
   }
 
   static addOutgoing(body) {
@@ -15,6 +15,10 @@ class SaleRepository {
 
   static getAll(date, userId) {
     return axiosInstance.get(`/sale/sale-summary?date=${date}&userId=${userId}`);
+  }
+
+  static getSaleEndDay() {
+    return axiosInstance.get('/sale/sale-end-day');
   }
 }
 

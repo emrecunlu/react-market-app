@@ -1,7 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain, Notification } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Menu } from 'electron'
 import { join } from 'path'
 import { networkInterfaces } from 'os'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import nodemailer from 'nodemailer'
 import { execFile, spawn } from 'child_process'
 import Store from 'electron-store'
 import icon from '../../resources/icon.png?asset'
@@ -9,9 +10,9 @@ import icon from '../../resources/icon.png?asset'
 Store.initRenderer()
 
 const store = new Store({ name: 'config' })
-const slipStore = new Store({ name: 'slips' })
 
 let child = null
+let mainWindow = null
 
 function runHuginApp() {
   const huginAppDirr = join(app.getPath('userData'), 'hugin/HuginSocketApp.exe')
@@ -19,14 +20,13 @@ function runHuginApp() {
   child = spawn(huginAppDirr)
 
   child.on('close', (code) => {
-    console.log(`Program exited with code ${code}`)
     child = null
   })
 }
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -131,7 +131,7 @@ ipcMain.handle('getLocalAddress', () => {
   return ipAddress
 })
 
-ipcMain.on('print:slip', () => {
+ipcMain.on('print:slip', async () => {
   const printerWindow = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
@@ -144,13 +144,13 @@ ipcMain.on('print:slip', () => {
     }
   })
 
+  const settings = await store.get('settings')
+
   printerWindow.on('ready-to-show', () => {
     printerWindow.webContents.openDevTools()
   })
 
-  printerWindow.webContents.on('did-finish-load', async () => {
-    const settings = await store.get('settings')
-
+  printerWindow.webContents.on('did-finish-load', () => {
     setTimeout(() => {
       printerWindow.webContents.print(
         {
@@ -162,12 +162,17 @@ ipcMain.on('print:slip', () => {
           deviceName: settings?.printerName ?? ''
         },
         (success, failureReason) => {
-          const notification = new Notification({
-            title: 'Fiş Durumu',
-            body: success ? 'Başarılı' : failureReason
-          })
-
-          notification.show()
+          if (success) {
+            mainWindow.webContents.send('slip:status', {
+              ok: true,
+              message: 'Fiş başarıyla basıldı!'
+            })
+          } else {
+            mainWindow.webContents.send('slip:status', {
+              ok: false,
+              message: failureReason
+            })
+          }
 
           printerWindow.close()
         }
@@ -180,4 +185,36 @@ ipcMain.on('print:slip', () => {
   } else {
     printerWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: '#/printer' })
   }
+})
+
+ipcMain.on('send:mail', async (event, data) => {
+  const { title, description } = data
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.yandex.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'trn.petrol2@yandex.com',
+      pass: 'Lvb2q9RxLqQaSe2'
+    }
+  })
+
+  // E-posta seçenekleri
+  const mailOptions = {
+    from: 'trn.petrol@yandex.com',
+    to: 'unlcemre0@gmail.com',
+    subject: title,
+    text: description
+  }
+
+  // E-posta gönderme işlemi
+  transporter
+    .sendMail(mailOptions)
+    .then((info) => {
+      console.log(info)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 })

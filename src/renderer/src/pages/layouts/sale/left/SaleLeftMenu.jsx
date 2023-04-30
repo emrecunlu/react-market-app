@@ -1,13 +1,13 @@
-import { Button, Stack } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { FcSimCard } from 'react-icons/fc'
+import { Stack } from '@mui/material'
 import React from 'react'
-import LogoutButton from './components/LogoutButton'
+import VardiyaBitirButton from './components/VardiyaBitirButton'
 import EmployeeButton from './components/EmployeeButton'
 import SettingsButton from './components/SettingsButton'
 import OutGoingButton from './components/OutGoingButton'
 import SaleListButton from './components/SaleListButton'
-import SlipButton from './components/SlipButton'
+import LogoutButton from './components/LogoutButton'
+import ReportButton from './components/ReportButton'
+import HelpButton from './components/HelpButton'
 
 const SaleLeftMenu = () => {
   return (
@@ -15,8 +15,11 @@ const SaleLeftMenu = () => {
       <EmployeeButton />
       <OutGoingButton />
       <SaleListButton />
+      <ReportButton />
       {/* <SlipButton /> */}
       <SettingsButton />
+      {/* <HelpButton /> */}
+      <VardiyaBitirButton />
       <LogoutButton />
     </Stack>
   )

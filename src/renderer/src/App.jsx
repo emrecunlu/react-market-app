@@ -7,6 +7,7 @@ import LoginPage from './pages/auth/LoginPage'
 import PrinterPage from './pages/print/PrinterPage'
 import { useSettings } from './store/features/settings'
 import SettingsHelper from './utils/helpers/settingsHelper'
+import { useMediaQuery } from 'react-responsive'
 
 const App = () => {
   const { settings } = useSettings()
@@ -14,6 +15,12 @@ const App = () => {
   useEffect(() => {
     SettingsHelper.initSettings(settings)
   }, [])
+
+  const isLargeDevice = useMediaQuery({ query: '(min-width: 1366px)' })
+
+  !isLargeDevice
+    ? window.electron.webFrame.setZoomFactor(0.85)
+    : window.electron.webFrame.setZoomFactor(1)
 
   return (
     <Routes>

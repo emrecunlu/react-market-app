@@ -4,21 +4,29 @@ import PaymetButton from '../../../../../../components/buttons/PaymetButton'
 import SelectOutgoingDialog from '../../../../../../components/dialogs/outgoing/SelectOutgoingDialog'
 import { useNewOutgoing } from '../../../../../../utils/hooks/useSaleRepository'
 import moment from 'moment'
+import { toast } from 'react-hot-toast'
+import SaleHelper from '../../../../../../utils/helpers/saleHelper'
 
 const MusteriGider = () => {
   const [dialog, setDialog] = useState(false)
 
-  const { mutate: newSale, isLoading } = useNewOutgoing()
+  const { mutate: newSale, isLoading } = useNewOutgoing(() => {
+    SaleHelper.succesSale(null)
 
-  const handleConfirm = (outgoing) => {
+    setDialog(false)
+  })
+
+  const handleConfirm = async (outgoing) => {
+    const personal = await window.api.getStoreValue('personal')
+
     newSale({
       description: outgoing.description,
       outgoingId: outgoing.id,
       price: outgoing.price,
       transfer: false,
       receiver: '',
-      submitter: '',
-      createdAt: moment().format('YYYY-MM-DD HH:mm:ss')
+      shiftId: personal.shiftId,
+      submitter: ''
     })
   }
 

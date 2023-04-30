@@ -7,12 +7,14 @@ import { DataGrid } from '@mui/x-data-grid'
 import { useGetSales } from '../../../utils/hooks/useSaleRepository'
 import SaleHelper from '../../../utils/helpers/saleHelper'
 import CircularLoader from '../../common/CircularLoader'
+import BaseDialog from '../../common/BaseDialog'
+import { dateFormat } from '../../../config/constants'
 
 const SaleListDialog = ({ isOpen, onClose }) => {
   const [selectedDate, setSelectedDate] = useState(moment())
   const [debouncedValue, setDebouncedValue] = useState(moment())
 
-  const { data, isLoading, refetch } = useGetSales(debouncedValue.format('YYYY-MM-DD hh:mm:ss'))
+  const { data, isLoading, refetch } = useGetSales(debouncedValue.format(dateFormat))
 
   useEffect(() => {
     refetch()
@@ -45,13 +47,6 @@ const SaleListDialog = ({ isOpen, onClose }) => {
       flex: 1
     },
     {
-      field: 'totalPrice',
-      headerName: 'Toplam Fiyat',
-      valueGetter: ({ row }) => {
-        return SaleHelper.toMoneyFormat(row.price * row.amount)
-      }
-    },
-    {
       field: 'price',
       headerName: 'Fiyat',
       flex: 1,
@@ -60,19 +55,25 @@ const SaleListDialog = ({ isOpen, onClose }) => {
       }
     },
     {
+      field: 'totalPrice',
+      headerName: 'Toplam Fiyat',
+      valueGetter: ({ row }) => {
+        return SaleHelper.toMoneyFormat(row.price * row.amount)
+      }
+    },
+    {
       field: 'createdAt',
       headerName: 'Tarih',
       flex: 1,
       valueFormatter: ({ value }) => {
-        return moment(value).format('YYYY-MM-DD hh:mm:ss')
+        return moment(value).format(dateFormat)
       }
     }
   ]
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <Dialog fullWidth maxWidth="xl" onClose={onClose} open={isOpen}>
-        <DialogTitle>Satış Listesi</DialogTitle>
+      <BaseDialog isOpen={isOpen} title="Satış Listesi" onClose={onClose}>
         <DialogContent dividers>
           <DateTimePicker
             value={selectedDate}
@@ -87,7 +88,7 @@ const SaleListDialog = ({ isOpen, onClose }) => {
             <DataGrid autoHeight columns={columns} rows={data ?? []} />
           )}
         </DialogContent>
-      </Dialog>
+      </BaseDialog>
     </LocalizationProvider>
   )
 }

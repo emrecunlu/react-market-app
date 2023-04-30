@@ -7,6 +7,8 @@ export const PaymentType = {
   Musteri: 6
 }
 
+export const dateFormat = 'YYYY-MM-DD HH:mm:ss'
+
 export const FatIrsSip = {
   Irsaliye: 1,
   Siparis: 2,
@@ -18,4 +20,10 @@ export const ReportType = {
   ZReport: 1,
   XReport: 2,
   EndDayReport: 3
+}
+
+export const DocumentType = {
+  Irsaliye: 1,
+  Siparis: 2,
+  Fatura: 3
 }

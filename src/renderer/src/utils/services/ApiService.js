@@ -10,7 +10,7 @@ axiosInstance.interceptors.request.use(
     const storage = await window.api.getStoreValue('personal')
     const settings = await window.api.getStoreValue('settings')
 
-    config.baseURL = settings?.serverAddress ?? baseURL;
+    config.baseURL = settings?.serverAddress ?? baseURL
 
     if (storage?.accessToken) {
       config.headers.Authorization = `Bearer ${storage.accessToken.token}`
@@ -31,8 +31,8 @@ axiosInstance.interceptors.response.use(
     const response = error?.response
 
     if (response) {
-      if (response?.data?.message) {
-        toast.error(response.data.message)
+      if (response?.data?.Message) {
+        toast.error(response.data.Message)
       } else {
         switch (response.status) {
           case 400:

@@ -10,22 +10,25 @@ export const useGetOutgoings = () => {
 }
 
 export const useAddOutgoing = (onSuccess, onError) => {
-  return useMutation((obj) => OutgoingRepository.add(obj), {
+  return useMutation({
+    mutationFn: (obj) => OutgoingRepository.add(obj),
     onSuccess,
     onError
   })
 }
 
 export const useUpdateOutgoing = (onSuccess, onError) => {
-  return useMutation((obj) => OutgoingRepository.update(obj), {
+  return useMutation({
+    mutationFn: (obj) => OutgoingRepository.update(obj),
     onSuccess,
     onError
   })
 }
 
 export const useRemoveOutgoing = (onSuccess, onError) => {
-  return useMutation((id) => OutgoingRepository.remove(id), {
-    onSuccess,
-    onError
+  return useMutation({
+    mutationFn: (id) => OutgoingRepository.remove(id),
+    onError,
+    onSuccess
   })
 }

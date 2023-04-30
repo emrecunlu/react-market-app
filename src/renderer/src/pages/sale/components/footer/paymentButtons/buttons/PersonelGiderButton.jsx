@@ -58,7 +58,7 @@ const PersonelGiderButton = () => {
           onClose={() => setDialog(false)}
         />
       )}
-      <PaymetButton onClick={() => setDialog(true)} icon={<FcAssistant />}>
+      <PaymetButton disabled={basketItems.length === 0} onClick={() => setDialog(true)} icon={<FcAssistant />}>
         PERSONEL
       </PaymetButton>
     </PageLoader>

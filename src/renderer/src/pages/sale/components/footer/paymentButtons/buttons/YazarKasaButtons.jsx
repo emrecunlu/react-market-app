@@ -4,27 +4,28 @@ import { FcDonate, FcSelfServiceKiosk } from 'react-icons/fc'
 import { PaymentType, ReportType } from '../../../../../../config/constants'
 import { toast } from 'react-hot-toast'
 import { useNewSale } from '../../../../../../utils/hooks/useSaleRepository'
-import { useBasket } from '../../../../../../store/features/basket'
+import { clearAll, useBasket } from '../../../../../../store/features/basket'
 import SaleHelper from '../../../../../../utils/helpers/saleHelper'
 import PageLoader from '../../../../../../components/common/PageLoader'
 import { Dialog } from '@mui/material'
-import { useSettings } from '../../../../../../store/features/settings'
+import store from '../../../../../../store'
+import { useSocket } from '../../../../../../context/SocketProvider'
 
 const YazarKasaButtons = () => {
-  const [socket, setSocket] = useState(null)
   const [payment, setPayment] = useState({
     payment: null,
     paymentType: null,
     reportType: null
   })
 
+  const { socket, error } = useSocket()
   const { data: basketItems } = useBasket()
-  const { settings } = useSettings()
 
   const onSuccess = (response) => {
     const { data: result } = response.data
 
-    SaleHelper.succesSale(result)
+    toast.success('Sipariş başarılı!')
+    store.dispatch(clearAll())
 
     socket?.send(
       JSON.stringify({
@@ -40,15 +41,13 @@ const YazarKasaButtons = () => {
     )
   }
 
-  console.log(basketItems)
-
   const { mutate: newSale, isLoading } = useNewSale(onSuccess)
 
-  const connectHugin = async () => {
+  /* const connectHugin = async () => {
     const localAddress = await window.api.getLocalAddress()
 
     const ipAdddress = await window.api.getLocalAddress()
-    const newSocket = new WebSocket(`ws://${localAddress}:1235`)
+    const newSocket = new WebSocket(`ws://192.168.5.128:1235/socket`)
 
     setSocket(newSocket)
 
@@ -63,6 +62,7 @@ const YazarKasaButtons = () => {
         case 200:
           return toast.success(response?.data)
         case 500:
+          connectHugin()
           return toast.error(response?.data)
         default:
           return
@@ -71,17 +71,19 @@ const YazarKasaButtons = () => {
 
     newSocket.addEventListener('error', () => {
       toast.error('Yazarkasa bağlantı hatası(Socket Error)')
+
+      connectHugin()
     })
 
     return () => {
       newSocket.close()
       setSocket(null)
     }
-  }
+  } */
 
-  useEffect(() => {
+  /*  useEffect(() => {
     connectHugin()
-  }, [])
+  }, []) */
 
   const handleClick = async (paymentType) => {
     setPayment({
@@ -103,7 +105,7 @@ const YazarKasaButtons = () => {
       stockName: item.stokAdi,
       amount: item.miktar,
       price: item.satisFiat1,
-      transfer: true,
+      transfer: false,
       vatGroup: item.kdvOrani.toString()
     }))
 
@@ -112,13 +114,19 @@ const YazarKasaButtons = () => {
 
   return (
     <>
+      {error}
       <Dialog open={isLoading}>
         <PageLoader isLoading={isLoading} />
       </Dialog>
-      <PaymetButton icon={<FcDonate />} onClick={() => handleClick(PaymentType.Pos)}>
+      <PaymetButton
+        disabled={basketItems.length === 0 || error}
+        icon={<FcDonate />}
+        onClick={() => handleClick(PaymentType.Pos)}
+      >
         POS
       </PaymetButton>
       <PaymetButton
+        disabled={basketItems.length === 0 || error}
         icon={<FcSelfServiceKiosk />}
         onClick={() => handleClick(PaymentType.Yazarkasa)}
       >

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Box, Paper, Stack, Typography, Button } from '@mui/material'
+import { Box, Paper, Stack, Typography, Button, Divider } from '@mui/material'
 import { clearAll, removeSelecteds, useBasket } from '../../../../../store/features/basket'
 import store from '../../../../../store'
 import SaleHelper from '../../../../../utils/helpers/saleHelper'

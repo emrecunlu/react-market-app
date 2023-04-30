@@ -21,6 +21,7 @@ import PageLoader from '../../common/PageLoader'
 import EmployeeAddDialog from './EmployeeAddDialog'
 import ConfirmationDialog from '../ConfirmationDialog'
 import { toast } from 'react-hot-toast'
+import BaseDialog from '../../common/BaseDialog'
 
 const EmployeeListDialog = ({ onClose, isOpen }) => {
   const [dialog, setDialog] = useState(false)
@@ -63,11 +64,14 @@ const EmployeeListDialog = ({ onClose, isOpen }) => {
   const { mutate: updateEmployee, isLoading: updateLoading } = useUpdateEmployee(() => {
     toast.success('Personel güncellendi.')
   })
-  const { mutate: removeEmployee, isLoading: removeLoading } = useRemoveEmployee(() => {
-    toast.success("Personel başarıyla silindi.")
+  const { mutate: removeEmployee, isLoading: removeLoading } = useRemoveEmployee(
+    () => {
+      /* toast.success('Personel başarıyla silindi.') */
 
-    refetch()
-  })
+      refetch()
+    },
+    () => console.log('error')
+  )
 
   const handleRowUpdate = (row) => {
     updateEmployee(row)
@@ -96,7 +100,7 @@ const EmployeeListDialog = ({ onClose, isOpen }) => {
         isOpen={dialog}
         onClose={() => setDialog(false)}
       />
-      <Dialog fullWidth maxWidth="xl" open={isOpen} onClose={onClose}>
+      {/* <Dialog fullWidth maxWidth="xl" isOpen={isOpen} onClose={onClose}>
         <PageLoader isLoading={updateLoading || removeLoading}>
           <DialogTitle>Personel Listesi</DialogTitle>
           <DialogContent dividers>
@@ -123,7 +127,34 @@ const EmployeeListDialog = ({ onClose, isOpen }) => {
             )}
           </DialogContent>
         </PageLoader>
-      </Dialog>
+      </Dialog> */}
+      <BaseDialog title="Personel Listesi" isOpen={isOpen} onClose={onClose}>
+        <PageLoader isLoading={updateLoading || removeLoading}>
+          <DialogContent dividers>
+            {(isLoading && <CircularLoader />) || (
+              <>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    endIcon={<AiOutlineUserAdd />}
+                    sx={{ mb: 2, ml: 'auto' }}
+                    onClick={() => setDialog(true)}
+                    size="large"
+                    variant="contained"
+                  >
+                    Personel Ekle
+                  </Button>
+                </Box>
+                <DataGrid
+                  processRowUpdate={handleRowUpdate}
+                  autoHeight
+                  columns={columns}
+                  rows={data ?? []}
+                />
+              </>
+            )}
+          </DialogContent>
+        </PageLoader>
+      </BaseDialog>
     </>
   )
 }

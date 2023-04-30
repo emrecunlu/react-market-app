@@ -1,4 +1,5 @@
 import store from '../../store'
+import { clearAll } from '../../store/features/basket';
 import { login as personalLogin } from '../../store/features/personal'
 
 class PersonalHelper {
@@ -10,6 +11,7 @@ class PersonalHelper {
   }
 
   static async logout() {
+    store.dispatch(clearAll());
     await window.api.deleteStoreValue('personal')
   }
 

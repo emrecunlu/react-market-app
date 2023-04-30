@@ -7,18 +7,18 @@ import {
   DialogTitle
 } from '@mui/material'
 import React from 'react'
+import BaseDialog from '../../common/BaseDialog'
 
 const OutgoingDescriptionDialog = ({ isOpen, onClose }) => {
   return (
-    <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle>Açıklama</DialogTitle>
+    <BaseDialog title="Açıklama" isOpen={isOpen} onClose={onClose}>
       <DialogContent>
         <DialogContentText>Gider hakkında bir açıklama giriniz.</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button>Satış Yap</Button>
       </DialogActions>
-    </Dialog>
+    </BaseDialog>
   )
 }
 

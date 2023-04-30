@@ -13,6 +13,7 @@ import { AiOutlineSave } from 'react-icons/ai'
 import { useSettings } from '../../../store/features/settings'
 import SettingsHelper from '../../../utils/helpers/settingsHelper'
 import { toast } from 'react-hot-toast'
+import BaseDialog from '../../common/BaseDialog'
 
 const SettingsDialog = ({ isOpen, onClose }) => {
   const { settings } = useSettings()
@@ -33,8 +34,7 @@ const SettingsDialog = ({ isOpen, onClose }) => {
   }
 
   return (
-    <Dialog fullWidth maxWidth="xl" onClose={onClose} open={isOpen}>
-      <DialogTitle>Ayarlar</DialogTitle>
+    <BaseDialog title="Ayarlar" onClose={onClose} isOpen={isOpen}>
       <DialogContent dividers>
         <Grid container spacing={2} rowSpacing={4}>
           <Grid item md={6}>
@@ -80,7 +80,7 @@ const SettingsDialog = ({ isOpen, onClose }) => {
           Kaydet
         </Button>
       </DialogActions>
-    </Dialog>
+    </BaseDialog>
   )
 }
 

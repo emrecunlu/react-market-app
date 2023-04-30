@@ -26,7 +26,7 @@ const LoginPage = () => {
   const [user, setUser] = useState({
     username: '',
     password: '',
-    shift: ''
+    shift: {}
   })
   const navigation = useNavigate()
 
@@ -35,7 +35,7 @@ const LoginPage = () => {
 
     const storageData = await window.api.setStoreValue({
       key: 'personal',
-      value: { ...result, shiftId: user.shift }
+      value: { ...result, shiftId: user.shift.id, shiftName: user.shift.name }
     })
 
     await PersonalHelper.login(storageData)
@@ -50,6 +50,12 @@ const LoginPage = () => {
     e.preventDefault()
 
     login(user)
+  }
+
+  const handleChange = (e) => {
+    const shift = shifts?.find((val) => val.id === e.target.value)
+
+    setUser((user) => ({ ...user, shift }))
   }
 
   return (
@@ -78,8 +84,8 @@ const LoginPage = () => {
                     labelId="shift-select-label"
                     id="shift-select-box"
                     placeholder="Vardiya seçiniz."
-                    value={user.shift ?? ''}
-                    onChange={(e) => setUser((user) => ({ ...user, shift: e.target.value }))}
+                    value={user.shift?.id ?? ''}
+                    onChange={handleChange}
                     label="Vardiya"
                   >
                     {shifts?.map((item) => (

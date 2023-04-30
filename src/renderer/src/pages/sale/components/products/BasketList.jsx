@@ -21,7 +21,7 @@ const BasketList = () => {
       valueSetter: ({ value, row }) => {
         if (isNaN(value) || value === '') return row
 
-        return { ...row, miktar: parseInt(value), toplamFiat: row.satisFiat1 * parseInt(value) }
+        return { ...row, miktar: parseFloat(value), toplamFiat: row.satisFiat1 * parseFloat(value) }
       },
       flex: 1
     },
@@ -57,6 +57,8 @@ const BasketList = () => {
 
   const handleCellEditStop = (params) => {
     store.dispatch(setBasketItem(params))
+
+    console.log(params)
 
     return params
   }

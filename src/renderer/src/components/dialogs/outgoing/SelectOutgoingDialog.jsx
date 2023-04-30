@@ -16,6 +16,7 @@ import ConfirmationDialog from '../../../components/dialogs/ConfirmationDialog'
 import { useGetOutgoings } from '../../../utils/hooks/useOutgoingRepository'
 import SaleHelper from '../../../utils/helpers/saleHelper'
 import { AiOutlineCheck } from 'react-icons/ai'
+import BaseDialog from '../../common/BaseDialog'
 
 const SelectOutgoingDialog = ({ isOpen, onClose, onConfirm }) => {
   const [dialog, setDialog] = useState(false)
@@ -54,23 +55,24 @@ const SelectOutgoingDialog = ({ isOpen, onClose, onConfirm }) => {
         onClose={() => setDialog(false)}
         onConfirm={() => onConfirm({ ...selected, description })}
       />
-      <Dialog fullWidth maxWidth="xl" onClose={onClose} open={isOpen}>
-        <DialogTitle>Gider Listesi</DialogTitle>
+      <BaseDialog title="Gider Listesi" onClose={onClose} isOpen={isOpen}>
         <DialogContent dividers>
           {(isLoading && <PageLoader />) || (
             <>
               {selected && (
-                <TextField
-                  fullWidth
-                  multiline
-                  onChange={(e) => setDescription(e.target.value)}
-                  value={description}
-                  rows={5}
-                  label="Açıklama"
-                  placeholder="Lütfen açıklama giriniz."
-                />
+                <>
+                  <TextField
+                    fullWidth
+                    multiline
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={description}
+                    rows={5}
+                    label="Açıklama"
+                    placeholder="Lütfen açıklama giriniz."
+                  />
+                  <Divider sx={{ my: 4 }} />
+                </>
               )}
-              <Divider sx={{ my: 4 }} />
               <DataGrid
                 processRowUpdate={handleRowUpdate}
                 autoHeight
@@ -92,7 +94,7 @@ const SelectOutgoingDialog = ({ isOpen, onClose, onConfirm }) => {
             Satış Yap
           </Button>
         </DialogActions>
-      </Dialog>
+      </BaseDialog>
     </>
   )
 }

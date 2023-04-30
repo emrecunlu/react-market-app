@@ -20,6 +20,7 @@ import {
 } from '../../store/features/basket'
 import store from '../../store'
 import { toast } from 'react-hot-toast'
+import BaseDialog from '../common/BaseDialog'
 
 const ProductDialog = ({ onClose, isOpen }) => {
   const [search, setSearch] = useState('')
@@ -59,8 +60,7 @@ const ProductDialog = ({ onClose, isOpen }) => {
   }
 
   return (
-    <Dialog onClose={onClose} fullWidth maxWidth="xl" open={isOpen}>
-      <DialogTitle>Ürün Listesi</DialogTitle>
+    <BaseDialog title="Ürün Listesi" isOpen={isOpen} onClose={onClose}>
       <DialogContent dividers>
         <TextField
           InputProps={{
@@ -88,7 +88,7 @@ const ProductDialog = ({ onClose, isOpen }) => {
           )}
         </Box>
       </DialogContent>
-    </Dialog>
+    </BaseDialog>
   )
 }
 
