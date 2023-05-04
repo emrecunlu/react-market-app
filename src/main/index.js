@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer'
 import { execFile, spawn } from 'child_process'
 import Store from 'electron-store'
 import icon from '../../resources/icon.png?asset'
+import log from 'electron-log'
 
 Store.initRenderer()
 
@@ -20,6 +21,7 @@ function runHuginApp() {
   child = spawn(huginAppDirr)
 
   child.on('close', (code) => {
+    log.error('Hugin socket uygulaması hata sonucu kapatıldı, Hata Kodu: ' + code)
     child = null
   })
 }
@@ -43,6 +45,8 @@ function createWindow() {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
     mainWindow.maximize()
+
+    log.info('Uygulama başlatıldı')
 
     setInterval(() => {
       if (child === null) {
@@ -163,11 +167,13 @@ ipcMain.on('print:slip', async () => {
         },
         (success, failureReason) => {
           if (success) {
+            log.info('Fiş başarıyla basıldı')
             mainWindow.webContents.send('slip:status', {
               ok: true,
               message: 'Fiş başarıyla basıldı!'
             })
           } else {
+            log.error('Yazıcı hatası: ' + failureReason)
             mainWindow.webContents.send('slip:status', {
               ok: false,
               message: failureReason
@@ -184,6 +190,23 @@ ipcMain.on('print:slip', async () => {
     printerWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#/printer')
   } else {
     printerWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: '#/printer' })
+  }
+})
+
+ipcMain.on('add:log', (event, data) => {
+  const { status, data: logdata } = data
+
+  switch (status) {
+    case 'info':
+      return log.info(JSON.stringify(logdata))
+    case 'error':
+      return log.error(JSON.stringify(logdata))
+    case 'warn':
+      return log.warn(JSON.stringify(logdata))
+    case 'verbose':
+      return log.verbose(JSON.stringify(logdata))
+    default:
+      return log.error(JSON.stringify(logdata))
   }
 })
 

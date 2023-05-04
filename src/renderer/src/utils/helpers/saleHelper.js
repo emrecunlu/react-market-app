@@ -14,9 +14,11 @@ class SaleHelper {
     store.dispatch(clearAll())
     toast.success('Sipariş Başarılı!')
 
+    window.api.addLog('info', 'Yeni sipariş: ' + JSON.stringify(slip));
+
     if (slip) {
       await window.api.setStoreValue({ key: 'slip', value: slip })
-      window.electron.ipcRenderer.send('print:slip')
+      window.electron.ipcRenderer.send('print:slip')  
     }
   }
 

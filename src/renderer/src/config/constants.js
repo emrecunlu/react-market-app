@@ -19,7 +19,9 @@ export const ReportType = {
   CancelDocument: 0,
   ZReport: 1,
   XReport: 2,
-  EndDayReport: 3
+  EndDayReport: 3,
+  Connect: 'Connect',
+  Disconnect: 'Disconnect'
 }
 
 export const DocumentType = {

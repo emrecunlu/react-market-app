@@ -1,13 +1,30 @@
 import React, { useState } from 'react'
-import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Button, Divider, IconButton, Stack, Typography } from '@mui/material'
 import ScanBarcode from './ScanBarcode'
 import { FcSearch } from 'react-icons/fc'
 import ProductDialog from '../../../../components/dialogs/ProductDialog'
 import { usePersonal } from '../../../../store/features/personal'
+import { TbPlugConnected } from 'react-icons/tb'
+import { useSocket } from '../../../../context/SocketProvider'
+import { ReportType } from '../../../../config/constants'
 
 const SaleMainHeader = () => {
   const [dialog, setDialog] = useState(false)
   const { credentials: personal } = usePersonal()
+
+  const { setError, loading, socket } = useSocket()
+
+  const handleClick = () => {
+    setError(true)
+
+    const Data = {
+      SlipCopy: false,
+      ReportType: ReportType.Connect,
+      Data: []
+    }
+
+    socket?.send(JSON.stringify(Data))
+  } 
 
   return (
     <>
@@ -31,6 +48,15 @@ const SaleMainHeader = () => {
             startIcon={<FcSearch size={26} />}
           >
             Ara
+          </Button>
+          <Button
+            disabled={loading}
+            onClick={handleClick}
+            variant="contained"
+            color="secondary"
+            startIcon={<TbPlugConnected />}
+          >
+            Bağlan
           </Button>
         </Stack>
         {/*  <TotalPriceBox /> */}

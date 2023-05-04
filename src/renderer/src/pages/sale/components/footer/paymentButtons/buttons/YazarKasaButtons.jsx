@@ -27,63 +27,48 @@ const YazarKasaButtons = () => {
     toast.success('Sipariş başarılı!')
     store.dispatch(clearAll())
 
-    socket?.send(
-      JSON.stringify({
-        Payment: payment.payment,
-        SlipCopy: true,
-        Data: basketItems.map((item) => ({
-          DeptId: SaleHelper.getDeptId(item.kdvOrani),
-          Amount: item.miktar,
-          Price: item.satisFiat1,
-          Name: item.stokAdi
-        }))
-      })
-    )
+    // eğer satış başarılı ise yazarkasa bağlantısını bitir.
+    const Data = {
+      SlipCopy: false,
+      ReportType: ReportType.Disconnect,
+      Data: []
+    }
+
+    socket?.send(JSON.stringify(Data))
+
+    setError(true)
   }
 
-  const { mutate: newSale, isLoading } = useNewSale(onSuccess)
+  useEffect(() => {
+    if (socket !== null) {
+      socket.addEventListener('message', async (data) => {
+        const response = JSON.parse(data.data)
+        if (response?.status === 223) {
+          const personal = await window.api.getStoreValue('personal')
 
-  /* const connectHugin = async () => {
-    const localAddress = await window.api.getLocalAddress()
+          const requestBody = {
+            shiftId: personal.shiftId,
+            isVATIncluded: true,
+            paymentType: payment.paymentType,
+            userId: personal.userId
+          }
 
-    const ipAdddress = await window.api.getLocalAddress()
-    const newSocket = new WebSocket(`ws://192.168.5.128:1235/socket`)
+          const sales = basketItems.map((item) => ({
+            stockCode: item.stokKodu,
+            stockName: item.stokAdi,
+            amount: item.miktar,
+            price: item.satisFiat1,
+            transfer: false,
+            vatGroup: item.kdvOrani.toString()
+          }))
 
-    setSocket(newSocket)
-
-    newSocket.addEventListener('open', () => {
-      toast.success('Yazarkasaya iletişimi kuruluyor.')
-    })
-
-    newSocket.addEventListener('message', (data) => {
-      const response = JSON.parse(data.data)
-
-      switch (response?.status) {
-        case 200:
-          return toast.success(response?.data)
-        case 500:
-          connectHugin()
-          return toast.error(response?.data)
-        default:
-          return
-      }
-    })
-
-    newSocket.addEventListener('error', () => {
-      toast.error('Yazarkasa bağlantı hatası(Socket Error)')
-
-      connectHugin()
-    })
-
-    return () => {
-      newSocket.close()
-      setSocket(null)
+          newSale({ ...requestBody, sales })
+        }
+      })
     }
-  } */
+  }, [])
 
-  /*  useEffect(() => {
-    connectHugin()
-  }, []) */
+  const { mutate: newSale, isLoading } = useNewSale(onSuccess)
 
   const handleClick = async (paymentType) => {
     setPayment({
@@ -91,7 +76,22 @@ const YazarKasaButtons = () => {
       paymentType
     })
 
-    const personal = await window.api.getStoreValue('personal')
+    window.api.addLog('info', 'Yazarkasa fişi cihaza gönderiliyor: ' + JSON.stringify(Data))
+
+    const Data = {
+      Payment: payment.payment,
+      SlipCopy: true,
+      Data: basketItems.map((item) => ({
+        DeptId: SaleHelper.getDeptId(item.kdvOrani),
+        Amount: item.miktar,
+        Price: item.satisFiat1,
+        Name: item.stokAdi
+      }))
+    }
+
+    socket?.send(JSON.stringify(Data))
+
+    /* const personal = await window.api.getStoreValue('personal')
 
     const requestBody = {
       shiftId: personal.shiftId,
@@ -109,7 +109,7 @@ const YazarKasaButtons = () => {
       vatGroup: item.kdvOrani.toString()
     }))
 
-    newSale({ ...requestBody, sales })
+    newSale({ ...requestBody, sales }) */
   }
 
   return (

@@ -11,6 +11,7 @@ const LogoutButton = () => {
   const navigate = useNavigate()
 
   const handleConfirm = () => {
+    window.api.addLog("Kullanıcı çıkış yaptı")
     PersonalHelper.logout()
 
     navigate('/auth/login')

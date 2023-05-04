@@ -20,6 +20,8 @@ const VardiyaBitirButton = () => {
   const onSuccess = () => {
     toast.success('Z raporu alınıyor, lütfen bekleyiniz...')
 
+    window.api.addLog('info', 'Vardiya bitiriliyor')
+
     const Data = {
       SlipCopy: false,
       ReportType: ReportType.ZReport,
